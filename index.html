@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Life RPG: English Edition</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ TOAST / FLOATERS LAYER ============ -->
+<div id="toastLayer" class="toast-layer"></div>
+<div id="floaterLayer" class="floater-layer"></div>
+
+<!-- ============ ONBOARDING ============ -->
+<div id="onboardingScreen" class="overlay-screen">
+  <div class="onboarding-glow"></div>
+  <div class="onboarding-content">
+    <div class="onboarding-logo">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+        <circle cx="36" cy="36" r="34" stroke="url(#logoGrad)" stroke-width="3"/>
+        <text x="36" y="46" text-anchor="middle" font-size="30" font-weight="800" fill="url(#logoGrad)" font-family="Poppins, sans-serif">EN</text>
+        <defs>
+          <linearGradient id="logoGrad" x1="0" y1="0" x2="72" y2="72">
+            <stop offset="0%" stop-color="#7C5CFF"/>
+            <stop offset="100%" stop-color="#3DDCFF"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <h1>Welcome to <span class="grad-text">Life RPG</span></h1>
+    <p class="onboarding-sub">Let's find your English level.</p>
+    <button id="startTestBtn" class="btn btn-primary btn-glow">START TEST</button>
+  </div>
+</div>
+
+<!-- ============ TEST SCREEN ============ -->
+<div id="testScreen" class="overlay-screen hidden">
+  <div class="test-header">
+    <div class="test-progress-track">
+      <div id="testProgressFill" class="test-progress-fill"></div>
+    </div>
+    <div id="testProgressLabel" class="test-progress-label">Question 1 / 20</div>
+  </div>
+  <div class="test-body">
+    <div id="testQuestionCard" class="glass-card test-question-card">
+      <div id="testQuestionLevel" class="pill pill-level">A1</div>
+      <h2 id="testQuestionText">Question</h2>
+      <div id="testOptions" class="options-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESULT SCREEN ============ -->
+<div id="resultScreen" class="overlay-screen hidden">
+  <div class="onboarding-glow"></div>
+  <div class="onboarding-content">
+    <p class="result-label">YOUR ENGLISH LEVEL</p>
+    <div id="resultLevel" class="result-level grad-text">A2</div>
+    <p id="resultDesc" class="onboarding-sub">You're ready for Elementary challenges.</p>
+    <button id="enterGameBtn" class="btn btn-primary btn-glow">ENTER LIFE RPG</button>
+  </div>
+</div>
+
+<!-- ============ APP SHELL ============ -->
+<div id="appShell" class="app-shell hidden">
+
+  <!-- ---------- HOME ---------- -->
+  <section id="screen-home" class="screen active-screen">
+    <header class="topbar">
+      <div class="brand">Life RPG</div>
+      <button id="settingsBtn" class="icon-btn" aria-label="Settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 15.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z" stroke="currentColor" stroke-width="1.6"/><path d="M19.4 13a1.7 1.7 0 00.33 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.33 1.7 1.7 0 00-1 1.55V19a2 2 0 11-4 0v-.09a1.7 1.7 0 00-1-1.56 1.7 1.7 0 00-1.87.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.7 1.7 0 00.33-1.87 1.7 1.7 0 00-1.55-1H4a2 2 0 110-4h.09a1.7 1.7 0 001.55-1 1.7 1.7 0 00-.33-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06a1.7 1.7 0 001.87.33H10a1.7 1.7 0 001-1.55V4a2 2 0 114 0v.09a1.7 1.7 0 001 1.55 1.7 1.7 0 001.87-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.7 1.7 0 00-.33 1.87V10a1.7 1.7 0 001.55 1H20a2 2 0 110 4h-.09a1.7 1.7 0 00-1.55 1z" stroke="currentColor" stroke-width="1.4"/></svg>
+      </button>
+    </header>
+
+    <div class="stat-strip">
+      <div class="level-chip">
+        <span id="homeLevelText">LEVEL 1</span>
+      </div>
+      <div class="xp-track-wrap">
+        <div class="xp-track"><div id="homeXpFill" class="xp-fill"></div></div>
+        <span id="homeXpLabel" class="xp-label">0 / 100 XP</span>
+      </div>
+      <div class="coin-chip"><span class="coin-ico">🪙</span><span id="homeCoins">500</span></div>
+    </div>
+
+    <div class="character-stage glass-card">
+      <div id="characterCanvas" class="character-canvas"></div>
+      <div class="char-glow"></div>
+    </div>
+
+    <div class="english-level-row">
+      <div class="pill pill-level" id="homeEnglishLevel">English Level: A1</div>
+    </div>
+
+    <div class="mini-stats-grid">
+      <div class="mini-stat glass-card">
+        <div class="mini-stat-icon">📗</div>
+        <div class="mini-stat-value" id="statVocab">0 words</div>
+        <div class="mini-stat-label">Vocabulary</div>
+      </div>
+      <div class="mini-stat glass-card">
+        <div class="mini-stat-icon">✏️</div>
+        <div class="mini-stat-value" id="statGrammar">0%</div>
+        <div class="mini-stat-label">Grammar</div>
+      </div>
+      <div class="mini-stat glass-card">
+        <div class="mini-stat-icon">📖</div>
+        <div class="mini-stat-value" id="statReading">0%</div>
+        <div class="mini-stat-label">Reading</div>
+      </div>
+      <div class="mini-stat glass-card">
+        <div class="mini-stat-icon">🎧</div>
+        <div class="mini-stat-value" id="statListening">0%</div>
+        <div class="mini-stat-label">Listening</div>
+      </div>
+    </div>
+
+    <div class="section-card glass-card quest-card">
+      <div class="quest-head">
+        <span class="quest-title">DAILY QUEST</span>
+        <span class="fire-chip">🔥 <span id="streakCount">0</span></span>
+      </div>
+      <p class="quest-desc">Complete 10 English questions</p>
+      <div class="xp-track"><div id="questFill" class="xp-fill quest-fill"></div></div>
+      <div class="quest-foot">
+        <span id="questProgressLabel">0 / 10</span>
+        <span class="quest-reward">+100 XP · +50 🪙</span>
+      </div>
+      <button id="questStartBtn" class="btn btn-primary btn-block">START</button>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">QUICK PLAY</div>
+      <div class="quickplay-grid">
+        <button class="quickplay-card glass-card" data-category="vocabulary">
+          <span class="qp-icon">🇬🇧</span><span>Vocabulary</span>
+        </button>
+        <button class="quickplay-card glass-card" data-category="grammar">
+          <span class="qp-icon">📖</span><span>Grammar</span>
+        </button>
+        <button class="quickplay-card glass-card" data-category="listening">
+          <span class="qp-icon">👂</span><span>Listening</span>
+        </button>
+        <button class="quickplay-card glass-card" data-category="reading">
+          <span class="qp-icon">📕</span><span>Reading</span>
+        </button>
+      </div>
+    </div>
+    <div class="bottom-spacer"></div>
+  </section>
+
+  <!-- ---------- LEARN ---------- -->
+  <section id="screen-learn" class="screen">
+    <header class="topbar"><div class="brand">Learn</div></header>
+    <div class="learn-hero glass-card">
+      <div class="learn-hero-flag">🇬🇧</div>
+      <div>
+        <div class="learn-hero-title">ENGLISH</div>
+        <div class="learn-hero-sub">Your level: <span id="learnLevelBadge">A1</span></div>
+      </div>
+    </div>
+    <div id="learnCategoryList" class="learn-list"></div>
+    <div class="bottom-spacer"></div>
+  </section>
+
+  <!-- ---------- SHOP ---------- -->
+  <section id="screen-shop" class="screen">
+    <header class="topbar">
+      <div class="brand">Shop</div>
+      <div class="coin-chip"><span class="coin-ico">🪙</span><span id="shopCoins">500</span></div>
+    </header>
+    <div id="shopTabs" class="shop-tabs">
+      <button class="shop-tab active" data-shopcat="clothing">👕 Clothing</button>
+      <button class="shop-tab" data-shopcat="accessories">🎧 Accessories</button>
+      <button class="shop-tab" data-shopcat="items">💻 Items</button>
+      <button class="shop-tab" data-shopcat="transport">🚗 Transport</button>
+    </div>
+    <div id="shopGrid" class="shop-grid"></div>
+    <div class="bottom-spacer"></div>
+  </section>
+
+  <!-- ---------- APARTMENT ---------- -->
+  <section id="screen-apartment" class="screen">
+    <header class="topbar">
+      <div class="brand">My Apartment</div>
+    </header>
+    <div class="apartment-hero glass-card">
+      <div id="apartmentLevelName" class="apt-level-name">Small Room</div>
+      <div class="apt-room" id="apartmentRoom"></div>
+    </div>
+    <div class="section-card glass-card apt-upgrade-card">
+      <div class="apt-upgrade-head">
+        <span>Level <span id="aptLevelNum">1</span></span>
+        <span id="aptNextInfo">Upgrade to Level 2</span>
+      </div>
+      <button id="aptUpgradeBtn" class="btn btn-primary btn-block">UPGRADE — <span id="aptUpgradeCost">1,000 🪙</span></button>
+    </div>
+    <div class="section-card">
+      <div class="section-title">FURNITURE</div>
+      <div id="furnitureGrid" class="shop-grid"></div>
+    </div>
+    <div class="section-card">
+      <div class="section-title">GARAGE</div>
+      <div class="garage-row glass-card">
+        <div id="garageIcon" class="garage-icon">🚲</div>
+        <div>
+          <div id="garageName" class="garage-name">Bicycle</div>
+          <div class="garage-sub">Your current transport</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-spacer"></div>
+  </section>
+
+  <!-- ---------- PROFILE ---------- -->
+  <section id="screen-profile" class="screen">
+    <header class="topbar"><div class="brand">Profile</div></header>
+    <div class="profile-card glass-card">
+      <div class="profile-avatar" id="profileAvatar"></div>
+      <div class="profile-name" id="profileName">Player</div>
+      <div class="profile-level" id="profileLevel">Level 1</div>
+      <div class="xp-track"><div id="profileXpFill" class="xp-fill"></div></div>
+      <div class="xp-label" id="profileXpLabel">0 / 100 XP</div>
+    </div>
+
+    <div class="section-card glass-card">
+      <div class="section-title">ENGLISH LEVEL</div>
+      <div class="profile-english-row">
+        <span class="pill pill-level" id="profileEnglishLevel">A1</span>
+        <button id="retakeTestBtn" class="btn btn-ghost btn-small">Retake Test</button>
+      </div>
+      <div class="mini-stats-grid">
+        <div class="mini-stat glass-card"><div class="mini-stat-value" id="pStatVocab">0</div><div class="mini-stat-label">Vocabulary</div></div>
+        <div class="mini-stat glass-card"><div class="mini-stat-value" id="pStatGrammar">0%</div><div class="mini-stat-label">Grammar</div></div>
+        <div class="mini-stat glass-card"><div class="mini-stat-value" id="pStatReading">0%</div><div class="mini-stat-label">Reading</div></div>
+        <div class="mini-stat glass-card"><div class="mini-stat-value" id="pStatListening">0%</div><div class="mini-stat-label">Listening</div></div>
+      </div>
+    </div>
+
+    <div class="section-card glass-card">
+      <div class="section-title">STATISTICS</div>
+      <div class="stat-list">
+        <div class="stat-row"><span>Total lessons</span><span id="pTotalLessons">0</span></div>
+        <div class="stat-row"><span>Correct answers</span><span id="pCorrectAnswers">0</span></div>
+        <div class="stat-row"><span>Words mastered</span><span id="pWordsMastered">0</span></div>
+        <div class="stat-row"><span>Current streak</span><span id="pStreak">0 days</span></div>
+      </div>
+    </div>
+
+    <div class="section-card glass-card">
+      <div class="section-title">STREAK CALENDAR</div>
+      <div id="streakCalendar" class="streak-calendar"></div>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">ACHIEVEMENTS</div>
+      <div id="achievementsGrid" class="achievements-grid"></div>
+    </div>
+    <div class="bottom-spacer"></div>
+  </section>
+
+  <!-- ---------- BOTTOM NAV ---------- -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-screen="home"><span class="nav-ico">🏠</span><span>Home</span></button>
+    <button class="nav-btn" data-screen="learn"><span class="nav-ico">📚</span><span>Learn</span></button>
+    <button class="nav-btn" data-screen="shop"><span class="nav-ico">🛍</span><span>Shop</span></button>
+    <button class="nav-btn" data-screen="apartment"><span class="nav-ico">🏠</span><span>Apartment</span></button>
+    <button class="nav-btn" data-screen="profile"><span class="nav-ico">👤</span><span>Profile</span></button>
+  </nav>
+</div>
+
+<!-- ============ QUIZ MODAL ============ -->
+<div id="quizModal" class="modal hidden">
+  <div class="modal-inner">
+    <div class="quiz-header">
+      <button id="quizCloseBtn" class="icon-btn">✕</button>
+      <div class="test-progress-track"><div id="quizProgressFill" class="test-progress-fill"></div></div>
+      <div id="quizCounter" class="quiz-counter">1/10</div>
+    </div>
+    <div class="quiz-body">
+      <div id="quizCategoryPill" class="pill pill-cat">Vocabulary</div>
+      <h2 id="quizQuestionText">Question text</h2>
+      <div id="quizOptions" class="options-grid"></div>
+    </div>
+    <div id="quizFeedback" class="quiz-feedback hidden">
+      <div id="quizFeedbackIcon" class="feedback-icon">✅</div>
+      <div id="quizFeedbackTitle" class="feedback-title">Correct!</div>
+      <div id="quizFeedbackExplain" class="feedback-explain"></div>
+      <div id="quizFeedbackReward" class="feedback-reward"></div>
+      <button id="quizNextBtn" class="btn btn-primary btn-block">NEXT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SESSION SUMMARY MODAL ============ -->
+<div id="summaryModal" class="modal hidden">
+  <div class="modal-inner summary-inner">
+    <div class="summary-trophy">🏆</div>
+    <h2>Session Complete!</h2>
+    <div class="summary-stats">
+      <div class="summary-stat"><span id="summaryCorrect">0</span><label>Correct</label></div>
+      <div class="summary-stat"><span id="summaryXp">0</span><label>XP earned</label></div>
+      <div class="summary-stat"><span id="summaryCoins">0</span><label>Coins earned</label></div>
+    </div>
+    <button id="summaryCloseBtn" class="btn btn-primary btn-block">CONTINUE</button>
+  </div>
+</div>
+
+<!-- ============ LEVEL UP MODAL ============ -->
+<div id="levelUpModal" class="modal hidden">
+  <div class="modal-inner levelup-inner">
+    <div class="levelup-burst"></div>
+    <div class="levelup-title">LEVEL UP!</div>
+    <div class="levelup-level" id="levelUpNewLevel">2</div>
+    <div class="levelup-reward" id="levelUpReward">+100 coins</div>
+    <button id="levelUpCloseBtn" class="btn btn-primary btn-block">AWESOME</button>
+  </div>
+</div>
+
+<!-- ============ ACHIEVEMENT TOAST TEMPLATE (JS driven) ============ -->
+
+<!-- ============ SETTINGS MODAL ============ -->
+<div id="settingsModal" class="modal hidden">
+  <div class="modal-inner">
+    <div class="quiz-header"><span class="modal-title">Settings</span><button id="settingsCloseBtn" class="icon-btn">✕</button></div>
+    <div class="settings-body">
+      <div class="settings-row">
+        <span>Sound</span>
+        <button id="soundToggleBtn" class="toggle-btn">🔊 ON</button>
+      </div>
+      <div class="settings-row">
+        <span>Player name</span>
+        <input id="playerNameInput" class="text-input" type="text" maxlength="16" placeholder="Player">
+      </div>
+      <button id="resetProgressBtn" class="btn btn-danger btn-block">Reset Progress</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ITEM DETAIL MODAL ============ -->
+<div id="itemModal" class="modal hidden">
+  <div class="modal-inner item-modal-inner">
+    <button id="itemModalCloseBtn" class="icon-btn item-modal-close">✕</button>
+    <div id="itemModalRarity" class="pill pill-rarity">Common</div>
+    <div id="itemModalPreview" class="item-modal-preview"></div>
+    <div id="itemModalName" class="item-modal-name">Hoodie</div>
+    <div id="itemModalRequirement" class="item-modal-requirement"></div>
+    <button id="itemModalAction" class="btn btn-primary btn-block">BUY — 500 🪙</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
